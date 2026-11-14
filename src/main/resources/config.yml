@@ -151,3 +151,8 @@ order:
 pickaxe:
   name: "&b&lAtlas Mc Kristal Kazma"
   max-days: 100
+
+# Savaş kilidi: oyuncu vuruşunda süre boyunca HİÇBİR komut kullanılamaz
+combat:
+  seconds: 15
+  kill-on-quit: true     # Savaştayken oyundan çıkan oyuncu ölür

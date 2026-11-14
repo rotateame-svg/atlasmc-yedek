@@ -3,6 +3,7 @@ package net.atlasmc;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,14 +66,22 @@ public class SellManager implements CommandExecutor, Listener {
         return it;
     }
 
+    /** Sunucuya özel eşyalar (spawner, kristal kazma, kasa anahtarı) satılamaz. */
+    private boolean protectedItem(ItemStack it) {
+        if (!it.hasItemMeta()) return false;
+        for (NamespacedKey k : it.getItemMeta().getPersistentDataContainer().getKeys())
+            if (k.getNamespace().startsWith("atlas")) return true;
+        return false;
+    }
+
     private double sellable(Inventory inv, int[] count) {
         double total = 0;
         for (int i = 0; i < 45; i++) {
             ItemStack it = inv.getItem(i);
-            if (it == null || it.getType().isAir() || it.hasItemMeta()) continue;
-            double pr = Prices.get(plugin, it.getType());
-            if (pr <= 0) continue;
-            total += pr * it.getAmount();
+            if (it == null || it.getType().isAir() || protectedItem(it)) continue;
+            double v = Prices.value(plugin, it);
+            if (v <= 0) continue;
+            total += v;
             count[0] += it.getAmount();
         }
         return total;
@@ -88,8 +97,11 @@ public class SellManager implements CommandExecutor, Listener {
                 "&7Toplam: &a$" + AtlasMC.money(total),
                 "", "&a▸ Satmak için tıkla!"));
         h.inv.setItem(53, icon(Material.PAPER, "&eBilgi",
-                "&7Fiyatı olmayan veya büyülü / isimli",
-                "&7eşyalar satılmaz, geri verilir."));
+                "&7Her eşya satılır; büyülü eşyalar",
+                "&7büyü değeriyle, hasarlı eşyalar",
+                "&7dayanıklılığına göre fiyatlanır.",
+                "&8Sunucuya özel eşyalar (spawner,",
+                "&8kristal kazma, anahtar) satılmaz."));
     }
 
     @EventHandler
@@ -134,10 +146,10 @@ public class SellManager implements CommandExecutor, Listener {
             if (it == null || it.getType().isAir()) continue;
             had = true;
             inv.setItem(i, null);
-            if (!h.cancel && eco != null && !it.hasItemMeta()) {
-                double pr = Prices.get(plugin, it.getType());
-                if (pr > 0) {
-                    total += pr * it.getAmount();
+            if (!h.cancel && eco != null && !protectedItem(it)) {
+                double v = Prices.value(plugin, it);
+                if (v > 0) {
+                    total += v;
                     sold += it.getAmount();
                     continue;
                 }

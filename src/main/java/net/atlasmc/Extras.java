@@ -15,12 +15,14 @@ public class Extras {
         AntiCheat ac = new AntiCheat(plugin);
         AntiXray xray = new AntiXray(plugin, ac);
         sell = new SellManager(plugin);
+        CombatManager combat = new CombatManager(plugin);
 
         PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(rtp, plugin);
         pm.registerEvents(ac, plugin);
         pm.registerEvents(xray, plugin);
         pm.registerEvents(sell, plugin);
+        pm.registerEvents(combat, plugin);
 
         plugin.getCommand("rtp").setExecutor(rtp);
         plugin.getCommand("rtpnpcolustur").setExecutor(rtp);
