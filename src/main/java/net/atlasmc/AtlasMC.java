@@ -38,6 +38,7 @@ public class AtlasMC extends JavaPlugin {
     private AuctionManager auction;
     private OrderManager orders;
     private PickaxeManager pickaxe;
+    private Extras extras;
 
     @Override
     public void onEnable() {
@@ -97,13 +98,15 @@ public class AtlasMC extends JavaPlugin {
             orders.save();
         }, 6000L, 6000L);
 
-        new Extras(this).enable();
+        extras = new Extras(this);
+        extras.enable();
 
         getLogger().info("AtlasMC aktif!");
     }
 
     @Override
     public void onDisable() {
+        if (extras != null) extras.disable();
         if (afk != null) afk.returnAll();
         saveData();
         if (spawners != null) spawners.save();

@@ -25,6 +25,8 @@ commands:
     description: Işınlanma menüsünü açar
   rtpnpcolustur:
     description: Bulunduğun yere RTP NPC'si oluşturur (silmek için /rtpnpcolustur sil)
+  sat:
+    description: Eşyaları menüye koyup satarsın
 permissions:
   atlasmc.admin:
     description: Yönetici komutları

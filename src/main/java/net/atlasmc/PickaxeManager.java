@@ -98,8 +98,7 @@ public class PickaxeManager implements CommandExecutor, Listener {
     }
 
     private ItemStack create(int days) {
-        Material mat = Material.matchMaterial(plugin.getConfig().getString("pickaxe.material", "DIAMOND_PICKAXE"));
-        if (mat == null) mat = Material.DIAMOND_PICKAXE;
+        Material mat = Material.NETHERITE_PICKAXE;
         long expire = System.currentTimeMillis() + days * 86400000L;
 
         ItemStack it = new ItemStack(mat);

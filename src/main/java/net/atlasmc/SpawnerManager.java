@@ -155,7 +155,7 @@ public class SpawnerManager implements Listener {
     }
 
     private double price(Material m) {
-        return plugin.getConfig().getDouble("sell." + m.name(), DEFAULT_SELL.getOrDefault(m, 1.0));
+        return Prices.get(plugin, m);
     }
 
     private long total(Data d) {
