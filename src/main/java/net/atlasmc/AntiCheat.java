@@ -79,7 +79,8 @@ public class AntiCheat implements Listener {
 
     private boolean lagging() {
         try {
-            return Bukkit.getServer().spigot().getTPS()[0] < 17.0;
+            Object r = Bukkit.getServer().getClass().getMethod("getTPS").invoke(Bukkit.getServer());
+            return ((double[]) r)[0] < 17.0;
         } catch (Throwable t) {
             return false;
         }
