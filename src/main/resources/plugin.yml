@@ -1,0 +1,37 @@
+name: AtlasMC
+main: net.atlasmc.AtlasMC
+version: 1.0.0
+api-version: '1.21'
+author: AtlasMC
+depend: [Vault]
+softdepend: [LuckPerms, Essentials]
+commands:
+  shop:
+    description: Market menüsünü açar
+  afk:
+    description: AFK odasına ışınlanır / geri döner
+  kristal:
+    description: Kristal bakiyeni gösterir ve marketi açar
+  kristalmarket:
+    description: Kristal marketini açar
+  ah:
+    description: Açık artırma / pazar
+  order:
+    description: Alım siparişleri
+  '3x3kazmaver':
+    description: Süreli 3x3 Kristal Kazma verir (sadece OP)
+    usage: /3x3kazmaver <gün> [oyuncu]
+  rtp:
+    description: Işınlanma menüsünü açar
+  rtpnpcolustur:
+    description: Bulunduğun yere RTP NPC'si oluşturur (silmek için /rtpnpcolustur sil)
+permissions:
+  atlasmc.admin:
+    description: Yönetici komutları
+    default: op
+  atlasmc.anticheat.alerts:
+    description: AntiCheat uyarılarını görür
+    default: op
+  atlasmc.anticheat.bypass:
+    description: AntiCheat kontrollerine takılmaz
+    default: false
