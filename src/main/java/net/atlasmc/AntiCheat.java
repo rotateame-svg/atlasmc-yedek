@@ -55,6 +55,7 @@ public class AntiCheat implements Listener {
 
     public AntiCheat(AtlasMC plugin) {
         this.plugin = plugin;
+        startTpsSampler();
         // VL her 10 saniyede 1 azalır
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (Data d : data.values()) d.vl.replaceAll((k, v) -> Math.max(0.0, v - 1.0));
@@ -77,13 +78,25 @@ public class AntiCheat implements Listener {
         return g == GameMode.CREATIVE || g == GameMode.SPECTATOR;
     }
 
-    private boolean lagging() {
+    private volatile double tps = 20.0;
+    private java.lang.reflect.Method tpsMethod;
+
+    private void startTpsSampler() {
         try {
-            Object r = Bukkit.getServer().getClass().getMethod("getTPS").invoke(Bukkit.getServer());
-            return ((double[]) r)[0] < 17.0;
+            tpsMethod = Bukkit.getServer().getClass().getMethod("getTPS");
         } catch (Throwable t) {
-            return false;
+            tpsMethod = null;
         }
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            try {
+                if (tpsMethod != null) tps = ((double[]) tpsMethod.invoke(Bukkit.getServer()))[0];
+            } catch (Throwable ignored) {
+            }
+        }, 100L, 100L);
+    }
+
+    private boolean lagging() {
+        return tps < 17.0;
     }
 
     // ---------- Uyarı / ceza ----------
@@ -173,9 +186,9 @@ public class AntiCheat implements Listener {
         }
 
         // ---- Fly / GroundSpoof ----
-        boolean special = p.hasPotionEffect(PotionEffectType.LEVITATION)
+        boolean special = !ground && (p.hasPotionEffect(PotionEffectType.LEVITATION)
                 || p.hasPotionEffect(PotionEffectType.SLOW_FALLING)
-                || climbOrLiquid(to);
+                || climbOrLiquid(to));
         if (ground) {
             d.airTicks = 0;
             d.airRise = 0;

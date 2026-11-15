@@ -27,6 +27,14 @@ commands:
     description: Bulunduğun yere RTP NPC'si oluşturur (silmek için /rtpnpcolustur sil)
   sat:
     description: Eşyaları menüye koyup satarsın
+  kitler:
+    description: Kit menüsünü açar
+  kityetkiver:
+    description: Oyuncuya kit yetkisi verir (sadece OP)
+    usage: /kityetkiver <oyuncu> <kit ismi>
+  kityetkial:
+    description: Oyuncudan kit yetkisini alır (sadece OP)
+    usage: /kityetkial <oyuncu> <kit ismi>
 permissions:
   atlasmc.admin:
     description: Yönetici komutları

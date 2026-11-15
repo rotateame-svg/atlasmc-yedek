@@ -156,3 +156,7 @@ pickaxe:
 combat:
   seconds: 15
   kill-on-quit: true     # Savaştayken oyundan çıkan oyuncu ölür
+
+# /kitler  (kit alma bekleme süresi, saat)
+kit:
+  cooldown-hours: 24
