@@ -188,7 +188,6 @@ public class UtilManager implements CommandExecutor {
                 "&e/sethome /home /homes /delhome &7- Evler  &e/tpa /tpaccept /tpdeny &7- Işınlanma isteği",
                 "&e/warp /warps &7- Warplar  &e/back &7- Son konum",
                 "&e/bal /pay /baltop /top &7- Para ve sıralamalar",
-                "&e/claim /unclaim /claims /trust /untrust &7- Arazi koruması",
                 "&e/msg /r &7- Özel mesaj  &e/rapor &7- Oyuncu bildir  &e/ping &7- Ping",
                 "&e/seen &7- Son görülme  &e/kurallar &7- Kurallar  &e/discord &7- Discord  &e/gunluk &7- 30 günlük ödül takvimi"
         };

@@ -44,7 +44,8 @@ public class Extras {
         MoneyManager money = new MoneyManager(plugin);
         ChatManager chat = new ChatManager(plugin);
         UtilManager util = new UtilManager(plugin);
-        ClaimManager claim = new ClaimManager(plugin);
+        SpawnProtect spawnProtect = new SpawnProtect(plugin);
+        StaffChat staffChat = new StaffChat(plugin);
         DailyManager daily = new DailyManager(plugin);
         SmpManager smp = new SmpManager(plugin);
 
@@ -56,7 +57,8 @@ public class Extras {
         pm.registerEvents(kit, plugin);
         pm.registerEvents(tp, plugin);
         pm.registerEvents(chat, plugin);
-        pm.registerEvents(claim, plugin);
+        pm.registerEvents(spawnProtect, plugin);
+        pm.registerEvents(staffChat, plugin);
         pm.registerEvents(daily, plugin);
         pm.registerEvents(smp, plugin);
 
@@ -71,7 +73,7 @@ public class Extras {
         bind(chat, "msg", "r", "mute", "unmute");
         bind(util, "ec", "craft", "feed", "heal", "fly", "gm", "clearchat", "bc", "invsee", "repair", "hat",
                 "ping", "rapor", "yardim");
-        bind(claim, "claim", "unclaim", "claims", "trust", "untrust", "trustlist");
+        bind(staffChat, "achat");
 
         startAnnouncer();
     }
@@ -81,7 +83,6 @@ public class Extras {
         List<String> msgs = new ArrayList<>(plugin.getConfig().getStringList("announcer.messages"));
         if (msgs.isEmpty()) {
             msgs.add("Günlük ödülünü almayı unutma: &e/gunluk");
-            msgs.add("Arazini korumak için &e/claim &7yaz.");
             msgs.add("Kitlerini almak için &e/kitler &7yaz.");
             msgs.add("Hile veya kural ihlali gördün mü? &e/rapor <oyuncu> <sebep>");
             msgs.add("Komut listesi için &e/yardim &7yaz.");

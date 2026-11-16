@@ -168,13 +168,9 @@ home:
 teleport:
   warmup-seconds: 3         # Işınlanma beklemesi (yöneticilere uygulanmaz)
 
-claim:
-  default-limit: 10         # Varsayılan arazi (chunk) sayısı (izin: atlasmc.claims.20 gibi)
-  cost: 0                   # Arazi başına para
-  worlds: [smp, smp_nether, smp_the_end]
 
 spawn:
-  protect-world: spawn      # Bu dünyada inşa/kırma kapalı (yöneticiler hariç)
+  protect-world: spawn      # Bu dünyada inşa/kırma/sandık kapalı (yöneticiler hariç)
   no-pvp: true
 
 chat:

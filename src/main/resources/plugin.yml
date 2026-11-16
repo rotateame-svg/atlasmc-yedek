@@ -95,18 +95,6 @@ commands:
     description: Ping gösterir
   rapor:
     description: Oyuncuyu yetkililere bildirir
-  claim:
-    description: Bulunduğun bölgeyi (chunk) korur
-  unclaim:
-    description: Araziyi bırakır
-  claims:
-    description: Arazilerini listeler
-  trust:
-    description: Araziye oyuncu ekler
-  untrust:
-    description: Arazi yetkisini alır
-  trustlist:
-    description: Yetkili oyuncular
   bal:
     description: Bakiyeni gösterir
     aliases: [balance, para]
@@ -144,6 +132,9 @@ commands:
     aliases: [rules]
   discord:
     description: Discord bağlantısı
+  achat:
+    description: Yetkili sohbeti (aç/kapat veya tek mesaj)
+    aliases: [ac, yetkilichat]
 permissions:
   atlasmc.admin:
     description: Yönetici komutları
@@ -166,9 +157,12 @@ permissions:
     default: op
   atlasmc.cmd.repair:
     default: op
-  atlasmc.claim.bypass:
-    description: Başkalarının arazisinde inşa edebilir
-    default: op
   atlasmc.chat.color:
     description: Sohbette renk kodu kullanabilir
+    default: op
+  atlasmc.achat:
+    description: Yetkili sohbetini kullanır ve görür
+    default: op
+  atlasmc.spawn.bypass:
+    description: Spawn dünyasında inşa edebilir
     default: op
