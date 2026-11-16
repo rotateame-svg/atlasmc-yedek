@@ -43,6 +43,12 @@ public class CombatManager implements Listener {
     }
 
     private void tag(Player p) {
+        if (p.getGameMode() == GameMode.SURVIVAL || p.getGameMode() == GameMode.ADVENTURE) {
+            if (p.getAllowFlight() || p.isFlying()) {
+                p.setFlying(false);
+                p.setAllowFlight(false);
+            }
+        }
         boolean was = isTagged(p);
         until.put(p.getUniqueId(), System.currentTimeMillis() + seconds() * 1000L);
         if (!was) plugin.msg(p, "&c&lSAVAŞTASIN! &7" + seconds() + " saniye boyunca hiçbir komut kullanamazsın.");

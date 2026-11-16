@@ -160,3 +160,55 @@ combat:
 # /kitler  (kit alma bekleme süresi, saat)
 kit:
   cooldown-hours: 24
+
+# ---- SMP çekirdeği ----
+home:
+  default-limit: 2          # Varsayılan ev sayısı (LuckPerms: atlasmc.homes.5 gibi izinle artar)
+
+teleport:
+  warmup-seconds: 3         # Işınlanma beklemesi (yöneticilere uygulanmaz)
+
+claim:
+  default-limit: 10         # Varsayılan arazi (chunk) sayısı (izin: atlasmc.claims.20 gibi)
+  cost: 0                   # Arazi başına para
+  worlds: [smp, smp_nether, smp_the_end]
+
+spawn:
+  protect-world: spawn      # Bu dünyada inşa/kırma kapalı (yöneticiler hariç)
+  no-pvp: true
+
+chat:
+  cooldown-ms: 1500
+
+daily:                      # /gunluk: 30 günlük takvim (7. günlerde 1, 30. günde 3 kasa anahtarı)
+  money: 500                # 1. gün parası
+  money-step: 75            # Her gün için eklenen para
+  crystals: 10              # 1. gün kristali
+  crystals-step: 1
+
+announcer:
+  enabled: true
+  interval-seconds: 300
+
+# ---- SMP ekstraları ----
+starter:
+  enabled: true             # İlk girişte başlangıç paketi (taş alet, yemek, meşale, bot)
+
+clearlag:
+  enabled: true
+  interval-minutes: 10      # Yerdeki eşyalar bu sürede bir temizlenir (30 sn öncesinden uyarı)
+
+mobs:
+  per-chunk-limit: 60       # Üreme / yumurta ile chunk başına en fazla canlı sayısı (0 = kapalı)
+
+sleep:
+  percentage: 30            # Gece atlamak için uyuması gereken oyuncu yüzdesi (0 = dokunma)
+
+links:
+  discord: ""               # /discord komutunda gösterilir
+
+rules:
+  - "Hile, x-ray ve bug kullanmak yasaktır."
+  - "Küfür, hakaret ve reklam yasaktır."
+  - "Başkasının arazisine veya eşyasına zarar vermek yasaktır."
+  - "Yetkililere saygılı ol, kararlarına uy."

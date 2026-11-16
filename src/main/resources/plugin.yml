@@ -35,6 +35,115 @@ commands:
   kityetkial:
     description: Oyuncudan kit yetkisini alır (sadece OP)
     usage: /kityetkial <oyuncu> <kit ismi>
+  spawn:
+    description: Spawn noktasına ışınlar
+  setspawn:
+    description: Spawn noktasını ayarlar (OP)
+  sethome:
+    description: Ev kurar
+  home:
+    description: Eve ışınlar
+  delhome:
+    description: Evi siler
+  homes:
+    description: Evlerini listeler
+  tpa:
+    description: Işınlanma isteği gönderir
+  tpahere:
+    description: Oyuncuyu sana çağırır
+  tpaccept:
+    description: Işınlanma isteğini kabul eder
+  tpdeny:
+    description: Işınlanma isteğini reddeder
+  tpcancel:
+    description: İsteklerini iptal eder
+  back:
+    description: Son konuma döner
+  warp:
+    description: Warp noktasına ışınlar
+  setwarp:
+    description: Warp kurar (OP)
+  delwarp:
+    description: Warp siler (OP)
+  warps:
+    description: Warp listesi
+  pay:
+    description: Oyuncuya para gönderir
+  baltop:
+    description: En zenginler
+  top:
+    description: Sıralamalar
+  unmute:
+    description: Susturmayı kaldırır (OP)
+  mute:
+    description: Oyuncuyu susturur (OP)
+  feed:
+    description: Açlığı giderir
+  heal:
+    description: Canı yeniler
+  fly:
+    description: Uçuşu aç/kapat
+  gm:
+    description: Oyun modu (OP)
+  invsee:
+    description: Envanter görüntüle (OP)
+  repair:
+    description: Eşyayı onarır
+  hat:
+    description: Eşyayı başa takar
+  ping:
+    description: Ping gösterir
+  rapor:
+    description: Oyuncuyu yetkililere bildirir
+  claim:
+    description: Bulunduğun bölgeyi (chunk) korur
+  unclaim:
+    description: Araziyi bırakır
+  claims:
+    description: Arazilerini listeler
+  trust:
+    description: Araziye oyuncu ekler
+  untrust:
+    description: Arazi yetkisini alır
+  trustlist:
+    description: Yetkili oyuncular
+  bal:
+    description: Bakiyeni gösterir
+    aliases: [balance, para]
+  gunluk:
+    description: 30 günlük günlük ödül menüsü
+    aliases: [gunlukodul, günlüködül, odul, daily]
+  msg:
+    description: Özel mesaj
+    aliases: [m, w, tell, fisilda]
+  r:
+    description: Son mesaja yanıt
+    aliases: [reply, yanit]
+  ec:
+    description: Ender sandığı
+    aliases: [enderchest]
+  craft:
+    description: Çalışma masası
+    aliases: [wb]
+  clearchat:
+    description: Sohbeti temizler (OP)
+    aliases: [cc]
+  bc:
+    description: Duyuru (OP)
+    aliases: [duyuru]
+  yardim:
+    description: Komut listesi
+    aliases: [komutlar]
+  vanish:
+    description: Görünmez olur (OP)
+    aliases: [v]
+  seen:
+    description: Oyuncunun son görülme zamanı
+  kurallar:
+    description: Sunucu kuralları
+    aliases: [rules]
+  discord:
+    description: Discord bağlantısı
 permissions:
   atlasmc.admin:
     description: Yönetici komutları
@@ -45,3 +154,21 @@ permissions:
   atlasmc.anticheat.bypass:
     description: AntiCheat kontrollerine takılmaz
     default: false
+  atlasmc.cmd.ec:
+    default: op
+  atlasmc.cmd.craft:
+    default: op
+  atlasmc.cmd.feed:
+    default: op
+  atlasmc.cmd.heal:
+    default: op
+  atlasmc.cmd.fly:
+    default: op
+  atlasmc.cmd.repair:
+    default: op
+  atlasmc.claim.bypass:
+    description: Başkalarının arazisinde inşa edebilir
+    default: op
+  atlasmc.chat.color:
+    description: Sohbette renk kodu kullanabilir
+    default: op
