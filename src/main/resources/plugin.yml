@@ -81,8 +81,6 @@ commands:
     description: Açlığı giderir
   heal:
     description: Canı yeniler
-  fly:
-    description: Uçuşu aç/kapat
   gm:
     description: Oyun modu (OP)
   invsee:
@@ -135,6 +133,17 @@ commands:
   achat:
     description: Yetkili sohbeti (aç/kapat veya tek mesaj)
     aliases: [ac, yetkilichat]
+  siralama:
+    description: Sıralama menüsü (para, kristal, süre, öldürme...)
+    aliases: [sıralama, liderlik]
+  yetkiliaktiflik:
+    description: Yetkili aktiflik istatistikleri (OP)
+    aliases: [yaktiflik, staffstats]
+  takim:
+    description: Takım sistemi
+    aliases: [takım, team]
+  tc:
+    description: Takım sohbeti
 permissions:
   atlasmc.admin:
     description: Yönetici komutları
@@ -152,8 +161,6 @@ permissions:
   atlasmc.cmd.feed:
     default: op
   atlasmc.cmd.heal:
-    default: op
-  atlasmc.cmd.fly:
     default: op
   atlasmc.cmd.repair:
     default: op

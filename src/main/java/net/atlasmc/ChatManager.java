@@ -68,7 +68,7 @@ public class ChatManager implements CommandExecutor, Listener {
 
         if (p.hasPermission("atlasmc.chat.color") || Util.admin(p)) e.setMessage(color(e.getMessage()));
 
-        String prefix = plugin.getTabPrefix(p).replace("%", "%%");
+        String prefix = TeamManager.chatTag(p).replace("%", "%%") + plugin.getTabPrefix(p).replace("%", "%%");
         e.setFormat(prefix + "%1$s" + color("&8 » &7") + "%2$s");
     }
 
@@ -158,6 +158,7 @@ public class ChatManager implements CommandExecutor, Listener {
             }
         }
         mutes.put(t.getUniqueId(), until);
+        if (s instanceof Player) StaffStats.addMute(((Player) s).getUniqueId());
         saveMutes();
         String dur = until == Long.MAX_VALUE ? "süresiz" : a[1] + " dk";
         plugin.msg(s, "&e" + t.getName() + " &7susturuldu &8(" + dur + ")");

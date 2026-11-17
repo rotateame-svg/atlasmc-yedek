@@ -208,3 +208,12 @@ rules:
   - "Küfür, hakaret ve reklam yasaktır."
   - "Başkasının arazisine veya eşyasına zarar vermek yasaktır."
   - "Yetkililere saygılı ol, kararlarına uy."
+
+# ---- Yetkili aktifliği / takım ----
+staff:
+  inactive-minutes-week: 120   # Son 7 günde bundan az aktif olan yetkililer ⚠ ile işaretlenir
+
+team:
+  max-members: 5
+  friendly-fire: false         # false: takım arkadaşları birbirine vuramaz
+  create-cost: 0

@@ -66,7 +66,7 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
     }
 
     // ---------- Işınlanma (bekleme + hareket iptali) ----------
-    private void tp(Player p, Location dest, String label) {
+    public void tp(Player p, Location dest, String label) {
         if (dest == null || dest.getWorld() == null) {
             plugin.msg(p, "&cIşınlanılacak konum bulunamadı.");
             return;

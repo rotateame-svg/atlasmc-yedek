@@ -13,6 +13,7 @@ public class Extras {
     private final AtlasMC plugin;
     private SellManager sell;
     private KitManager kit;
+    private StaffStats stats;
     private int announceIndex = 0;
 
     public Extras(AtlasMC plugin) {
@@ -44,6 +45,10 @@ public class Extras {
         MoneyManager money = new MoneyManager(plugin);
         ChatManager chat = new ChatManager(plugin);
         UtilManager util = new UtilManager(plugin);
+        TeamManager team = new TeamManager(plugin, tp);
+        StaffStats staffStats = new StaffStats(plugin);
+        this.stats = staffStats;
+        RankingManager ranking = new RankingManager(plugin);
         SpawnProtect spawnProtect = new SpawnProtect(plugin);
         StaffChat staffChat = new StaffChat(plugin);
         DailyManager daily = new DailyManager(plugin);
@@ -58,6 +63,9 @@ public class Extras {
         pm.registerEvents(tp, plugin);
         pm.registerEvents(chat, plugin);
         pm.registerEvents(spawnProtect, plugin);
+        pm.registerEvents(team, plugin);
+        pm.registerEvents(staffStats, plugin);
+        pm.registerEvents(ranking, plugin);
         pm.registerEvents(staffChat, plugin);
         pm.registerEvents(daily, plugin);
         pm.registerEvents(smp, plugin);
@@ -67,11 +75,14 @@ public class Extras {
         bind(kit, "kitler", "kityetkiver", "kityetkial");
         bind(tp, "spawn", "setspawn", "sethome", "home", "delhome", "homes", "tpa", "tpahere", "tpaccept",
                 "tpdeny", "tpcancel", "back", "warp", "setwarp", "delwarp", "warps");
-        bind(money, "bal", "pay", "baltop", "top");
+        bind(money, "bal", "pay");
+        bind(ranking, "siralama", "baltop", "top");
+        bind(staffStats, "yetkiliaktiflik");
+        bind(team, "takim", "tc");
         bind(daily, "gunluk");
         bind(smp, "vanish", "seen", "kurallar", "discord");
         bind(chat, "msg", "r", "mute", "unmute");
-        bind(util, "ec", "craft", "feed", "heal", "fly", "gm", "clearchat", "bc", "invsee", "repair", "hat",
+        bind(util, "ec", "craft", "feed", "heal", "gm", "clearchat", "bc", "invsee", "repair", "hat",
                 "ping", "rapor", "yardim");
         bind(staffChat, "achat");
 
@@ -99,5 +110,6 @@ public class Extras {
     public void disable() {
         if (sell != null) sell.closeAll();
         if (kit != null) kit.save();
+        if (stats != null) stats.saveAll();
     }
 }

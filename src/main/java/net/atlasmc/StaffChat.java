@@ -64,6 +64,7 @@ public class StaffChat implements CommandExecutor, Listener {
         String who;
         if (s instanceof Player) {
             Player p = (Player) s;
+            StaffStats.addAchat(p.getUniqueId());
             who = plugin.getTabPrefix(p) + p.getName();
         } else {
             who = color("&4Konsol");

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 import static net.atlasmc.AtlasMC.color;
 
-/** /ec /craft /feed /heal /fly /gm /clearchat /bc /invsee /repair /hat /ping /rapor /yardim */
+/** /ec /craft /feed /heal /gm /clearchat /bc /invsee /repair /hat /ping /rapor /yardim */
 public class UtilManager implements CommandExecutor {
 
     private final AtlasMC plugin;
@@ -76,14 +76,6 @@ public class UtilManager implements CommandExecutor {
                 p.setFireTicks(0);
                 plugin.msg(p, "&aCanın yenilendi.");
                 break;
-            case "fly": {
-                if (!need(p, "fly")) break;
-                boolean on = !p.getAllowFlight();
-                p.setAllowFlight(on);
-                if (!on) p.setFlying(false);
-                plugin.msg(p, on ? "&aUçuş açıldı." : "&eUçuş kapatıldı.");
-                break;
-            }
             case "gm":
                 gm(p, a);
                 break;
@@ -187,7 +179,7 @@ public class UtilManager implements CommandExecutor {
                 "&e/rtp &7- Rastgele ışınlan  &e/afk &7- AFK odası  &e/spawn &7- Spawn",
                 "&e/sethome /home /homes /delhome &7- Evler  &e/tpa /tpaccept /tpdeny &7- Işınlanma isteği",
                 "&e/warp /warps &7- Warplar  &e/back &7- Son konum",
-                "&e/bal /pay /baltop /top &7- Para ve sıralamalar",
+                "&e/bal /pay &7- Para  &e/siralama &7- Sıralamalar  &e/takim &7- Takım sistemi",
                 "&e/msg /r &7- Özel mesaj  &e/rapor &7- Oyuncu bildir  &e/ping &7- Ping",
                 "&e/seen &7- Son görülme  &e/kurallar &7- Kurallar  &e/discord &7- Discord  &e/gunluk &7- 30 günlük ödül takvimi"
         };
