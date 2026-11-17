@@ -43,7 +43,8 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
     private final YamlConfiguration y;
     private final Map<UUID, Location> back = new HashMap<>();
     private final Set<UUID> busy = new HashSet<>();
-    private final Map<UUID, Req> requests = new HashMap<>();
+    private final Map<UUID, Map<UUID, Req>> requests = new HashMap<>();
+    private final Map<UUID, Long> tpaCooldown = new HashMap<>();
 
     public TeleportManager(AtlasMC plugin, CombatManager combat) {
         this.plugin = plugin;
@@ -75,6 +76,10 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
             plugin.msg(p, "&cSavaştayken ışınlanamazsın!");
             return;
         }
+        if (plugin.afk() != null && plugin.afk().isAfkWorld(dest.getWorld())) {
+            plugin.msg(p, "&cAFK odasına bu şekilde ışınlanamazsın. &7(/afk kullan)");
+            return;
+        }
         if (!busy.add(p.getUniqueId())) {
             plugin.msg(p, "&cZaten ışınlanıyorsun.");
             return;
@@ -82,8 +87,7 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
         int warm = Util.admin(p) ? 0 : plugin.getConfig().getInt("teleport.warmup-seconds", 3);
         if (warm <= 0) {
             busy.remove(p.getUniqueId());
-            p.teleport(dest);
-            plugin.msg(p, "&a" + label + " &7konumuna ışınlandın.");
+            doTp(p, dest, label);
             return;
         }
         final Location from = p.getLocation();
@@ -114,14 +118,25 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 if (left <= 0) {
                     busy.remove(p.getUniqueId());
                     cancel();
-                    p.teleport(dest);
-                    plugin.msg(p, "&a" + label + " &7konumuna ışınlandın.");
+                    doTp(p, dest, label);
                     return;
                 }
                 Util.bar(p, "&bIşınlanıyorsun... &f" + left);
                 left--;
             }
         }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    /** Araçtan / bindirilenlerden kurtarıp ışınlar, düşme hasarını sıfırlar. */
+    private void doTp(Player p, Location dest, String label) {
+        if (p.isInsideVehicle()) p.leaveVehicle();
+        if (!p.getPassengers().isEmpty()) p.eject();
+        if (!p.teleport(dest)) {
+            plugin.msg(p, "&cIşınlanma başarısız oldu, tekrar dene.");
+            return;
+        }
+        p.setFallDistance(0f);
+        plugin.msg(p, "&a" + label + " &7konumuna ışınlandın.");
     }
 
     @EventHandler
@@ -138,8 +153,31 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        requests.remove(e.getPlayer().getUniqueId());
-        busy.remove(e.getPlayer().getUniqueId());
+        UUID id = e.getPlayer().getUniqueId();
+        requests.remove(id);
+        for (Map<UUID, Req> m : requests.values()) m.remove(id);
+        tpaCooldown.remove(id);
+        busy.remove(id);
+    }
+
+    /** Bekleyen isteği alır: isim verilirse o oyuncunun, verilmezse en yeni istek. Süresi dolanlar silinir. */
+    private Req takeRequest(Player p, String fromName) {
+        Map<UUID, Req> m = requests.get(p.getUniqueId());
+        if (m == null) return null;
+        long now = System.currentTimeMillis();
+        m.values().removeIf(r -> r.expire < now);
+        Req pick = null;
+        for (Req r : m.values()) {
+            if (fromName != null) {
+                Player f = Bukkit.getPlayer(r.from);
+                if (f != null && f.getName().equalsIgnoreCase(fromName)) pick = r;
+            } else if (pick == null || r.expire > pick.expire) {
+                pick = r;
+            }
+        }
+        if (pick != null) m.remove(pick.from);
+        if (m.isEmpty()) requests.remove(p.getUniqueId());
+        return pick;
     }
 
     // ---------- Evler ----------
@@ -175,6 +213,10 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 plugin.msg(p, "&aSpawn noktası ayarlandı.");
                 break;
             case "sethome": {
+                if (plugin.afk() != null && plugin.afk().isAfk(p)) {
+                    plugin.msg(p, "&cAFK odasında ev kuramazsın.");
+                    break;
+                }
                 String name = a.length > 0 ? a[0].toLowerCase() : "home";
                 if (!name.matches("[a-z0-9_]{1,16}")) {
                     plugin.msg(p, "&cEv adı en fazla 16 harf/rakam/_ olabilir.");
@@ -230,19 +272,30 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 if (a.length < 1) { plugin.msg(p, "&cKullanım: &e/" + c.getName() + " <oyuncu>"); break; }
                 Player t = Bukkit.getPlayerExact(a[0]);
                 if (t == null || t.equals(p)) { plugin.msg(p, "&cOyuncu bulunamadı."); break; }
+                if (plugin.afk() != null && plugin.afk().isAfk(t)) {
+                    plugin.msg(p, "&cBu oyuncu AFK odasında, ona ışınlanamazsın.");
+                    break;
+                }
+                long now = System.currentTimeMillis();
+                Long cd = tpaCooldown.get(p.getUniqueId());
+                if (cd != null && cd > now) {
+                    plugin.msg(p, "&cÇok hızlı istek gönderiyorsun, &e" + ((cd - now) / 1000 + 1) + " sn &cbekle.");
+                    break;
+                }
+                tpaCooldown.put(p.getUniqueId(), now + 5000L);
                 Req r = new Req();
                 r.from = p.getUniqueId();
                 r.here = c.getName().equalsIgnoreCase("tpahere");
-                r.expire = System.currentTimeMillis() + 60000L;
-                requests.put(t.getUniqueId(), r);
-                plugin.msg(p, "&a" + t.getName() + " &7oyuncusuna istek gönderildi. &8(60 sn)");
+                r.expire = now + 60000L;
+                requests.computeIfAbsent(t.getUniqueId(), k -> new HashMap<>()).put(p.getUniqueId(), r);
+                plugin.msg(p, "&a" + t.getName() + " &7oyuncusuna istek gönderildi. &8(60 sn, iptal: /tpcancel)");
                 plugin.msg(t, "&e" + p.getName() + (r.here ? " &7seni kendisine ışınlamak istiyor." : " &7sana ışınlanmak istiyor."));
-                plugin.msg(t, "&a/tpaccept &7kabul, &c/tpdeny &7reddet.");
+                plugin.msg(t, "&a/tpaccept " + p.getName() + " &7kabul, &c/tpdeny " + p.getName() + " &7reddet.");
                 break;
             }
             case "tpaccept": {
-                Req r = requests.remove(p.getUniqueId());
-                if (r == null || r.expire < System.currentTimeMillis()) { plugin.msg(p, "&cBekleyen isteğin yok."); break; }
+                Req r = takeRequest(p, a.length > 0 ? a[0] : null);
+                if (r == null) { plugin.msg(p, "&cBekleyen isteğin yok."); break; }
                 Player from = Bukkit.getPlayer(r.from);
                 if (from == null) { plugin.msg(p, "&cİstek gönderen oyuncu çevrimdışı."); break; }
                 plugin.msg(p, "&aİstek kabul edildi.");
@@ -252,7 +305,7 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 break;
             }
             case "tpdeny": {
-                Req r = requests.remove(p.getUniqueId());
+                Req r = takeRequest(p, a.length > 0 ? a[0] : null);
                 if (r == null) { plugin.msg(p, "&cBekleyen isteğin yok."); break; }
                 Player from = Bukkit.getPlayer(r.from);
                 plugin.msg(p, "&eİstek reddedildi.");
@@ -260,7 +313,8 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 break;
             }
             case "tpcancel": {
-                boolean any = requests.values().removeIf(r -> r.from.equals(p.getUniqueId()));
+                boolean any = false;
+                for (Map<UUID, Req> m : requests.values()) any |= m.remove(p.getUniqueId()) != null;
                 plugin.msg(p, any ? "&eGönderdiğin istekler iptal edildi." : "&cİptal edilecek isteğin yok.");
                 break;
             }

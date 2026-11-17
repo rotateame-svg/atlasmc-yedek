@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
@@ -71,6 +72,10 @@ public class AfkManager implements CommandExecutor, Listener {
         }
     }
 
+    public boolean isAfkWorld(World w) {
+        return w != null && w.getName().equals(worldName);
+    }
+
     public boolean isAfk(Player p) {
         return world != null && p.getWorld().getName().equals(worldName);
     }
@@ -114,6 +119,14 @@ public class AfkManager implements CommandExecutor, Listener {
         if (isAfk(p)) leave(p, true);
         else enter(p);
         return true;
+    }
+
+    /** AFK odasından /spawn, /home, /rtp, /tpa gibi yollarla çıkılırsa körlük kalmasın. */
+    @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent e) {
+        if (!e.getFrom().getName().equals(worldName)) return;
+        e.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
+        back.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler

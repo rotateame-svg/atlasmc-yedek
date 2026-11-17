@@ -147,7 +147,8 @@ public class UtilManager implements CommandExecutor {
     }
 
     private void gm(Player p, String[] a) {
-        if (!Util.admin(p)) { plugin.msg(p, "&cBu komutu kullanamazsın."); return; }
+        // Sadece operatörler: LuckPerms'teki "*" gibi joker yetkiler bu komutu açmasın
+        if (!p.isOp()) { plugin.msg(p, "&cBu komutu sadece operatörler kullanabilir."); return; }
         if (a.length < 1) { plugin.msg(p, "&cKullanım: &e/gm <0|1|2|3> [oyuncu]"); return; }
         GameMode mode;
         switch (a[0].toLowerCase()) {

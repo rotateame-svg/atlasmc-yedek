@@ -228,6 +228,12 @@ public class AntiCheat implements Listener {
             for (double oz = -0.3; oz <= 0.3; oz += 0.3) {
                 Block b = l.clone().add(ox, -0.1, oz).getBlock();
                 if (!b.isPassable()) return true;
+                // Çit, duvar gibi 1.5 blok yüksekliğindeki bloklar
+                Block tall = l.clone().add(ox, -0.6, oz).getBlock();
+                if (!tall.isPassable()) {
+                    String tn = tall.getType().name();
+                    if (tn.contains("FENCE") || tn.contains("WALL") || tn.contains("BARS")) return true;
+                }
             }
         return false;
     }

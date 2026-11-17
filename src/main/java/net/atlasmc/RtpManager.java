@@ -203,6 +203,10 @@ public class RtpManager implements CommandExecutor, Listener {
 
     // ---------- Işınlanma ----------
     private void start(Player p, String worldName) {
+        if (CombatManager.isCombat(p)) {
+            plugin.msg(p, "&cSavaştayken ışınlanamazsın!");
+            return;
+        }
         World w = Bukkit.getWorld(worldName);
         if (w == null) {
             plugin.msg(p, "&cBu dünya şu an kapalı.");

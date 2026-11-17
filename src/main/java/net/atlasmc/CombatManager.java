@@ -25,11 +25,19 @@ import static net.atlasmc.AtlasMC.color;
 /** Savaş kilidi: oyuncu vuruşunda 15 sn boyunca hiçbir komut kullanılamaz, çıkarsa ölür. */
 public class CombatManager implements Listener {
 
+    private static CombatManager instance;
+
+    /** Başka sınıflardan (RTP NPC vb.) savaş kontrolü. */
+    public static boolean isCombat(Player p) {
+        return instance != null && instance.isTagged(p);
+    }
+
     private final AtlasMC plugin;
     private final Map<UUID, Long> until = new HashMap<>();
 
     public CombatManager(AtlasMC plugin) {
         this.plugin = plugin;
+        instance = this;
         Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 10L, 10L);
     }
 
