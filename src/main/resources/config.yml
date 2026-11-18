@@ -181,6 +181,8 @@ daily:                      # /gunluk: 30 günlük takvim (7. günlerde 1, 30. g
   money-step: 75            # Her gün için eklenen para
   crystals: 10              # 1. gün kristali
   crystals-step: 1
+  key-type: oyuncu          # 7, 14, 21, 28. günlerde verilen kasa anahtarı tipi (efsanevi / ozel / oyuncu)
+  key-type-final: ozel      # 30. günde verilen anahtar tipi
 
 announcer:
   enabled: true

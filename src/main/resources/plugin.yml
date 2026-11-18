@@ -4,7 +4,7 @@ version: 1.0.0
 api-version: '1.21'
 author: AtlasMC
 depend: [Vault]
-softdepend: [LuckPerms, Essentials]
+softdepend: [LuckPerms, Essentials, AuthMe]
 commands:
   shop:
     description: Market menüsünü açar
@@ -57,8 +57,6 @@ commands:
     description: Işınlanma isteğini reddeder
   tpcancel:
     description: İsteklerini iptal eder
-  back:
-    description: Son konuma döner
   warp:
     description: Warp noktasına ışınlar
   setwarp:

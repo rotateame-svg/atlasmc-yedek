@@ -74,7 +74,7 @@ public class Extras {
         bind(sell, "sat");
         bind(kit, "kitler", "kityetkiver", "kityetkial");
         bind(tp, "spawn", "setspawn", "sethome", "home", "delhome", "homes", "tpa", "tpahere", "tpaccept",
-                "tpdeny", "tpcancel", "back", "warp", "setwarp", "delwarp", "warps");
+                "tpdeny", "tpcancel", "warp", "setwarp", "delwarp", "warps");
         bind(money, "bal", "pay");
         bind(ranking, "siralama", "baltop", "top");
         bind(staffStats, "yetkiliaktiflik");

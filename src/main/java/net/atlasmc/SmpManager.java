@@ -137,7 +137,7 @@ public class SmpManager implements CommandExecutor, Listener {
         Player p = e.getEntity();
         Location l = p.getLocation();
         plugin.msg(p, "&cÖldüğün konum: &f" + l.getWorld().getName() + " &7X: &f" + l.getBlockX()
-                + " &7Y: &f" + l.getBlockY() + " &7Z: &f" + l.getBlockZ() + " &8(/back ile dönebilirsin)");
+                + " &7Y: &f" + l.getBlockY() + " &7Z: &f" + l.getBlockZ());
     }
 
     // ---------- Komutlar ----------

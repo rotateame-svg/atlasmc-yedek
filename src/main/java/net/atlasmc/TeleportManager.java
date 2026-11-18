@@ -10,9 +10,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -41,7 +45,6 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
     private final CombatManager combat;
     private final File file;
     private final YamlConfiguration y;
-    private final Map<UUID, Location> back = new HashMap<>();
     private final Set<UUID> busy = new HashSet<>();
     private final Map<UUID, Map<UUID, Req>> requests = new HashMap<>();
     private final Map<UUID, Long> tpaCooldown = new HashMap<>();
@@ -139,25 +142,98 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
         plugin.msg(p, "&a" + label + " &7konumuna ışınlandın.");
     }
 
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        PlayerTeleportEvent.TeleportCause c = e.getCause();
-        if (c == PlayerTeleportEvent.TeleportCause.COMMAND || c == PlayerTeleportEvent.TeleportCause.PLUGIN)
-            back.put(e.getPlayer().getUniqueId(), e.getFrom());
+
+
+    // ---------- Kaldığın yerden devam / ölünce spawn ----------
+    /** AuthMe varsa oyuncunun giriş yapıp yapmadığını sorar (yoksa true). */
+    private boolean authed(Player p) {
+        Plugin am = Bukkit.getPluginManager().getPlugin("AuthMe");
+        if (am == null || !am.isEnabled()) return true;
+        try {
+            Class<?> api = am.getClass().getClassLoader().loadClass("fr.xephi.authme.api.v3.AuthMeApi");
+            Object inst = api.getMethod("getInstance").invoke(null);
+            return (Boolean) api.getMethod("isAuthenticated", Player.class).invoke(inst, p);
+        } catch (Throwable t) {
+            return true;
+        }
     }
 
+    /** Ölen oyuncu: kayıtlı konumu silinir, yeniden doğunca (yatağı olsa bile) spawn'a gider. */
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
-        back.put(e.getEntity().getUniqueId(), e.getEntity().getLocation());
+        UUID id = e.getEntity().getUniqueId();
+        y.set("died." + id, true);
+        y.set("last." + id, null);
+        save();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onRespawn(PlayerRespawnEvent e) {
+        UUID id = e.getPlayer().getUniqueId();
+        if (!y.getBoolean("died." + id, false)) return; // ölüm değil (örn. End çıkışı), dokunma
+        e.setRespawnLocation(spawnLoc());
+        y.set("died." + id, null);
+        save();
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        UUID id = e.getPlayer().getUniqueId();
+        Player p = e.getPlayer();
+        UUID id = p.getUniqueId();
         requests.remove(id);
         for (Map<UUID, Req> m : requests.values()) m.remove(id);
         tpaCooldown.remove(id);
         busy.remove(id);
+
+        // Çıkış konumunu kaydet (ölüyse, giriş yapmamışsa ya da AFK odasındaysa kaydetme)
+        boolean afkWorld = plugin.afk() != null && plugin.afk().isAfkWorld(p.getWorld());
+        if (p.isDead() || p.getHealth() <= 0 || afkWorld || !authed(p) || y.getBoolean("died." + id, false)) return;
+        Util.putLoc(y, "last." + id, p.getLocation());
+        save();
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        final Player p = e.getPlayer();
+        final UUID id = p.getUniqueId();
+        final boolean died = y.getBoolean("died." + id, false);
+        final Location saved = Util.getLoc(y, "last." + id);
+        if (!died && saved == null) return;
+
+        // Giriş (AuthMe) tamamlanınca çalışır; en fazla 90 sn bekler
+        new BukkitRunnable() {
+            int tries = 0;
+
+            @Override
+            public void run() {
+                if (!p.isOnline() || ++tries > 90) {
+                    cancel();
+                    return;
+                }
+                if (!authed(p)) return;
+                cancel();
+                Bukkit.getScheduler().runTaskLater(plugin, () -> restore(p, id, died, saved), 20L);
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
+    }
+
+    private void restore(Player p, UUID id, boolean died, Location saved) {
+        if (!p.isOnline()) return;
+        if (died) {
+            // Ölürken çıkmış: yatağı olsa bile spawn
+            y.set("died." + id, null);
+            y.set("last." + id, null);
+            save();
+            p.teleport(spawnLoc());
+            plugin.msg(p, "&7Öldüğün için spawn noktasına döndün.");
+            return;
+        }
+        if (saved == null || saved.getWorld() == null) return;
+        if (plugin.afk() != null && plugin.afk().isAfkWorld(saved.getWorld())) return;
+        Location cur = p.getLocation();
+        if (cur.getWorld().equals(saved.getWorld()) && cur.distanceSquared(saved) < 16) return; // zaten orada
+        if (p.isInsideVehicle()) p.leaveVehicle();
+        if (p.teleport(saved)) plugin.msg(p, "&7Kaldığın yerden devam ediyorsun.");
     }
 
     /** Bekleyen isteği alır: isim verilirse o oyuncunun, verilmezse en yeni istek. Süresi dolanlar silinir. */
@@ -316,12 +392,6 @@ public class TeleportManager implements CommandExecutor, TabCompleter, Listener 
                 boolean any = false;
                 for (Map<UUID, Req> m : requests.values()) any |= m.remove(p.getUniqueId()) != null;
                 plugin.msg(p, any ? "&eGönderdiğin istekler iptal edildi." : "&cİptal edilecek isteğin yok.");
-                break;
-            }
-            case "back": {
-                Location l = back.get(p.getUniqueId());
-                if (l == null) { plugin.msg(p, "&cDönülecek bir konum yok."); break; }
-                tp(p, l.clone(), "Son konum");
                 break;
             }
             case "warp": {

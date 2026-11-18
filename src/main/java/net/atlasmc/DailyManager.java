@@ -51,6 +51,7 @@ public class DailyManager implements CommandExecutor, Listener {
     private static class Reward {
         double money;
         int crystals, keys;
+        String keyType = "oyuncu";
         final List<ItemStack> items = new ArrayList<>();
     }
 
@@ -99,6 +100,25 @@ public class DailyManager implements CommandExecutor, Listener {
     }
 
     // ---------- Durum ----------
+    private String weeklyKeyType() {
+        return plugin.getConfig().getString("daily.key-type", "oyuncu");
+    }
+
+    private String finalKeyType() {
+        return plugin.getConfig().getString("daily.key-type-final", "ozel");
+    }
+
+    /** Anahtarın menüde görünen adı (AtlasKasa tip kimliğinden). */
+    private static String keyLabel(String type) {
+        String n = type.toLowerCase().replace("ö", "o").replace("ü", "u").replace("ı", "i").replace("ş", "s");
+        switch (n) {
+            case "efsanevi": return "Efsanevi Kasa";
+            case "ozel": return "Özel Kasa";
+            case "oyuncu": return "Oyuncu Kasası";
+            default: return type;
+        }
+    }
+
     private long today() {
         return LocalDate.now(ZONE).toEpochDay();
     }
@@ -147,6 +167,7 @@ public class DailyManager implements CommandExecutor, Listener {
         r.money = (baseM + stepM * (day - 1)) * mult;
         r.crystals = (int) Math.round((baseC + stepC * (day - 1)) * mult);
         r.keys = day == CYCLE ? 3 : (day % 7 == 0 ? 1 : 0);
+        r.keyType = day == CYCLE ? finalKeyType() : weeklyKeyType();
         if (ITEMS[day] != null) {
             for (String spec : ITEMS[day]) {
                 String[] p = spec.split(":");
@@ -163,7 +184,7 @@ public class DailyManager implements CommandExecutor, Listener {
         l.add("&7Kristal: &d+" + r.crystals);
         for (ItemStack it : r.items)
             l.add("&7▪ &f" + it.getAmount() + "x " + AtlasMC.pretty(it.getType().name()));
-        if (r.keys > 0) l.add("&d&l✦ &d" + r.keys + "x Kasa Anahtarı");
+        if (r.keys > 0) l.add("&d&l✦ &d" + r.keys + "x " + keyLabel(r.keyType) + " Anahtarı");
         return l;
     }
 
@@ -247,8 +268,8 @@ public class DailyManager implements CommandExecutor, Listener {
                 List.of("&7Her gün sunucuya gir ve ödülünü al.",
                         "&7Ödül gece yarısı (00:00) yenilenir.",
                         "",
-                        "&d✦ &77, 14, 21 ve 28. günlerde &d1 Kasa Anahtarı",
-                        "&d✦ &730. günde &d3 Kasa Anahtarı &7+ büyük ödül",
+                        "&d✦ &77, 14, 21 ve 28. günlerde &d1 " + keyLabel(weeklyKeyType()) + " Anahtarı",
+                        "&d✦ &730. günde &d3 " + keyLabel(finalKeyType()) + " Anahtarı &7+ büyük ödül",
                         "&730 günden sonra takvim &e1. günden &7tekrar başlar.",
                         "",
                         "&7Toplam giriş yaptığın gün: &e" + y.getInt(id + ".total", 0))));
@@ -302,7 +323,7 @@ public class DailyManager implements CommandExecutor, Listener {
         String note = "";
         if (r.keys > 0) {
             if (Bukkit.getPluginManager().getPlugin("AtlasKasa") != null) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kasaanahtarver " + r.keys + " " + p.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kasaanahtarver " + r.keyType + " " + r.keys + " " + p.getName());
             } else {
                 int comp = 50 * r.keys;
                 plugin.addCrystals(id, comp);
@@ -319,7 +340,7 @@ public class DailyManager implements CommandExecutor, Listener {
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         p.sendTitle(color("&a&lGünlük Ödül"), color("&7Gün &e" + day + "&7/&e" + CYCLE), 5, 40, 10);
         plugin.msg(p, "&aGün " + day + " ödülünü aldın! &a+$" + AtlasMC.money(r.money) + " &8| &d+" + r.crystals
-                + " Kristal" + (r.keys > 0 ? " &8| &d" + r.keys + "x Kasa Anahtarı" : "") + note);
+                + " Kristal" + (r.keys > 0 ? " &8| &d" + r.keys + "x " + keyLabel(r.keyType) + " Anahtarı" : "") + note);
         if (day == CYCLE) {
             Bukkit.broadcastMessage(color(AtlasMC.PREFIX + "&e" + p.getName() + " &730 günlük ödül takvimini tamamladı! &6&l✦"));
             plugin.msg(p, "&7Takvim sıfırlandı, bir sonraki ödülün &e1. gün&7'den başlar.");
