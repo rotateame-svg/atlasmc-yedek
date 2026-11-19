@@ -1,19 +1,173 @@
-name: AtlasKasa
-main: net.atlaskasa.AtlasKasa
-version: 1.1.0
+name: AtlasMC
+main: net.atlasmc.AtlasMC
+version: 1.0.0
 api-version: '1.21'
 author: AtlasMC
+depend: [Vault]
+softdepend: [LuckPerms, Essentials, AuthMe]
 commands:
-  kasakoy:
-    description: Baktığın yere belirtilen tipte kasa koyar, envanterindeki eşyaları ödül olarak içine alır
-    usage: /kasakoy <efsanevi|ozel|oyuncu>
-  kasasil:
-    description: Baktığın kasayı siler, içindeki eşyaları sana geri verir
-    usage: /kasasil
-  kasaanahtarver:
-    description: Belirtilen kasa tipinin anahtarını verir
-    usage: /kasaanahtarver <efsanevi|ozel|oyuncu> <adet> [oyuncu]
+  shop:
+    description: Market menüsünü açar
+  afk:
+    description: AFK odasına ışınlanır / geri döner
+  kristal:
+    description: Kristal bakiyeni gösterir ve marketi açar
+  kristalmarket:
+    description: Kristal marketini açar
+  ah:
+    description: Açık artırma / pazar
+  order:
+    description: Alım siparişleri
+  '3x3kazmaver':
+    description: Süreli 3x3 Kristal Kazma verir (sadece OP)
+    usage: /3x3kazmaver <gün> [oyuncu]
+  rtp:
+    description: Işınlanma menüsünü açar
+  rtpnpcolustur:
+    description: Bulunduğun yere RTP NPC'si oluşturur (silmek için /rtpnpcolustur sil)
+  sat:
+    description: Eşyaları menüye koyup satarsın
+  kitler:
+    description: Kit menüsünü açar
+  kityetkiver:
+    description: Oyuncuya kit yetkisi verir (sadece OP)
+    usage: /kityetkiver <oyuncu> <kit ismi>
+  kityetkial:
+    description: Oyuncudan kit yetkisini alır (sadece OP)
+    usage: /kityetkial <oyuncu> <kit ismi>
+  spawn:
+    description: Spawn noktasına ışınlar
+  setspawn:
+    description: Spawn noktasını ayarlar (OP)
+  sethome:
+    description: Ev kurar
+  home:
+    description: Eve ışınlar
+  delhome:
+    description: Evi siler
+  homes:
+    description: Evlerini listeler
+  tpa:
+    description: Işınlanma isteği gönderir
+  tpahere:
+    description: Oyuncuyu sana çağırır
+  tpaccept:
+    description: Işınlanma isteğini kabul eder
+  tpdeny:
+    description: Işınlanma isteğini reddeder
+  tpcancel:
+    description: İsteklerini iptal eder
+  warp:
+    description: Warp noktasına ışınlar
+  setwarp:
+    description: Warp kurar (OP)
+  delwarp:
+    description: Warp siler (OP)
+  warps:
+    description: Warp listesi
+  pay:
+    description: Oyuncuya para gönderir
+  baltop:
+    description: En zenginler
+  top:
+    description: Sıralamalar
+  unmute:
+    description: Susturmayı kaldırır (OP)
+  mute:
+    description: Oyuncuyu susturur (OP)
+  feed:
+    description: Açlığı giderir
+  heal:
+    description: Canı yeniler
+  gm:
+    description: Oyun modu (OP)
+  invsee:
+    description: Envanter görüntüle (OP)
+  repair:
+    description: Eşyayı onarır
+  hat:
+    description: Eşyayı başa takar
+  ping:
+    description: Ping gösterir
+  rapor:
+    description: Oyuncuyu yetkililere bildirir
+  bal:
+    description: Bakiyeni gösterir
+    aliases: [balance, para]
+  gunluk:
+    description: 30 günlük günlük ödül menüsü
+    aliases: [gunlukodul, günlüködül, odul, daily]
+  msg:
+    description: Özel mesaj
+    aliases: [m, w, tell, fisilda]
+  r:
+    description: Son mesaja yanıt
+    aliases: [reply, yanit]
+  ec:
+    description: Ender sandığı
+    aliases: [enderchest]
+  craft:
+    description: Çalışma masası
+    aliases: [wb]
+  clearchat:
+    description: Sohbeti temizler (OP)
+    aliases: [cc]
+  bc:
+    description: Duyuru (OP)
+    aliases: [duyuru]
+  yardim:
+    description: Komut listesi
+    aliases: [komutlar]
+  vanish:
+    description: Görünmez olur (OP)
+    aliases: [v]
+  seen:
+    description: Oyuncunun son görülme zamanı
+  kurallar:
+    description: Sunucu kuralları
+    aliases: [rules]
+  discord:
+    description: Discord bağlantısı
+  achat:
+    description: Yetkili sohbeti (aç/kapat veya tek mesaj)
+    aliases: [ac, yetkilichat]
+  siralama:
+    description: Sıralama menüsü (para, kristal, süre, öldürme...)
+    aliases: [sıralama, liderlik]
+  yetkiliaktiflik:
+    description: Yetkili aktiflik istatistikleri (OP)
+    aliases: [yaktiflik, staffstats]
+  takim:
+    description: Takım sistemi
+    aliases: [takım, team]
+  tc:
+    description: Takım sohbeti
 permissions:
-  atlaskasa.admin:
-    description: Kasa yönetim komutları
+  atlasmc.admin:
+    description: Yönetici komutları
+    default: op
+  atlasmc.anticheat.alerts:
+    description: AntiCheat uyarılarını görür
+    default: op
+  atlasmc.anticheat.bypass:
+    description: AntiCheat kontrollerine takılmaz
+    default: false
+  atlasmc.cmd.ec:
+    default: op
+  atlasmc.cmd.craft:
+    default: op
+  atlasmc.cmd.feed:
+    default: op
+  atlasmc.cmd.heal:
+    default: op
+  atlasmc.cmd.repair:
+    default: op
+  atlasmc.chat.color:
+    description: Sohbette renk kodu kullanabilir
+    default: op
+  atlasmc.achat:
+    description: Yetkili sohbetini kullanır ve görür
+    default: op
+  atlasmc.spawn.bypass:
+    description: Spawn dünyasında inşa edebilir
     default: op
