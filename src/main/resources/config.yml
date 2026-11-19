@@ -1,221 +1,28 @@
-# ================= AtlasMC =================
-scoreboard:
-  title: "&b&lATLASMC"
-  sw-name: "Survival"        # Scoreboard'da "SW" satırında yazacak isim
-  ip: "oyna.atlasmc.net"
+# Hangi tip verilmezse kullanılacak kasa tipi (eski "/kasaanahtarver <adet>" komutu için de)
+default-type: oyuncu
 
-tab:
-  header: "&b&lAtlas Mc"
-  ip: "oyna.atlasmc.net"
+crate:
+  hologram: true              # Kasanın üstünde yazı gösterilsin mi
+  broadcast: true             # Kasa açılınca tüm sunucuya duyur
 
-# LuckPerms grup adı -> görünecek rank
-ranks:
-  default: "&7Oyuncu"
-  vip: "&aVIP"
-  rehber: "&bRehber"
-  kurucu: "&4&lKurucu"
-
-crystal:
-  per-minute: 1
-  afk-per-minute: 2
-
-afk:
-  world: atlas_afk
-  blindness: true            # Kapkara görüntü için kör efekti
-
-spawner:
-  interval-seconds: 10       # Spawner kaç saniyede bir ürün/xp üretir
-  max-storage: 10000         # Her ürün için depo limiti
-
-# Kristal market + spawner ayarları
-# drops: MATERYAL: "min-max"
-spawners:
-  ZOMBIE:
-    name: "Zombi"
-    cost: 100
-    xp: 4
-    drops:
-      ROTTEN_FLESH: "1-3"
-  SKELETON:
-    name: "İskelet"
-    cost: 150
-    xp: 5
-    drops:
-      BONE: "1-2"
-      ARROW: "1-2"
-  COW:
-    name: "İnek"
-    cost: 200
-    xp: 3
-    drops:
-      BEEF: "1-3"
-      LEATHER: "0-2"
-  PIG:
-    name: "Domuz"
-    cost: 200
-    xp: 3
-    drops:
-      PORKCHOP: "1-3"
-  SPIDER:
-    name: "Örümcek"
-    cost: 250
-    xp: 5
-    drops:
-      STRING: "0-2"
-      SPIDER_EYE: "0-1"
-  CREEPER:
-    name: "Creeper"
-    cost: 400
-    xp: 6
-    drops:
-      GUNPOWDER: "0-2"
-  BLAZE:
-    name: "Blaze"
-    cost: 600
-    xp: 10
-    drops:
-      BLAZE_ROD: "0-1"
-  IRON_GOLEM:
-    name: "Demir Golem"
-    cost: 1000
-    xp: 8
-    drops:
-      IRON_INGOT: "1-3"
-      POPPY: "0-2"
-
-# /shop  (DonutSMP tarzı: kategori -> ürün -> miktar seç -> satın al)
-shop:
-  title: "&8Atlas Shop"
-  categories:
-    pvp:
-      name: "&c&lPvP"
-      icon: END_CRYSTAL
-      items:
-        - {material: END_CRYSTAL, price: 150}
-        - {material: OBSIDIAN, price: 20}
-        - {material: RESPAWN_ANCHOR, price: 400}
-        - {material: GLOWSTONE, price: 25}
-        - {material: TNT, price: 100}
-        - {material: ENDER_PEARL, price: 150}
-        - {material: TOTEM_OF_UNDYING, price: 1000}
-        - {material: GOLDEN_APPLE, price: 300}
-    yardimci:
-      name: "&b&lYardımcı Eşyalar"
-      icon: EXPERIENCE_BOTTLE
-      items:
-        - {material: SHIELD, price: 150}
-        - {material: EXPERIENCE_BOTTLE, price: 100}
-        - {material: ARROW, price: 5}
-        - {material: SPECTRAL_ARROW, price: 15}
-        - {material: SHULKER_SHELL, price: 800}
-        - {material: SHULKER_BOX, price: 2000}
-    yiyecek:
-      name: "&6&lYiyecek"
-      icon: COOKED_BEEF
-      items:
-        - {material: COOKED_BEEF, price: 25}
-        - {material: COOKED_PORKCHOP, price: 25}
-        - {material: COOKED_CHICKEN, price: 20}
-        - {material: COOKED_SALMON, price: 20}
-        - {material: BREAD, price: 15}
-        - {material: BAKED_POTATO, price: 12}
-        - {material: GOLDEN_CARROT, price: 40}
-        - {material: PUMPKIN_PIE, price: 30}
-        - {material: HONEY_BOTTLE, price: 30}
-    bloklar:
-      name: "&a&lBloklar"
-      icon: GRASS_BLOCK
-      items:
-        - {material: COBBLESTONE, price: 5}
-        - {material: STONE, price: 8}
-        - {material: DEEPSLATE, price: 8}
-        - {material: OAK_LOG, price: 15}
-        - {material: SAND, price: 8}
-        - {material: GLASS, price: 12}
-        - {material: DIRT, price: 3}
-        - {material: NETHERRACK, price: 5}
-        - {material: END_STONE, price: 15}
-
-# /ah  (Açık Artırma / Pazar)
-ah:
-  max-listings: 10
-  duration-hours: 48
-  tax-percent: 5       # Satıştan kesilen vergi (%)
-  min-price: 1
-
-# /order  (Alım siparişleri)
-order:
-  max-orders: 5
-
-# /3x3kazmaver  (Atlas Mc Kristal Kazma)
-pickaxe:
-  name: "&b&lAtlas Mc Kristal Kazma"
-  max-days: 100
-
-# Savaş kilidi: oyuncu vuruşunda süre boyunca HİÇBİR komut kullanılamaz
-combat:
-  seconds: 15
-  kill-on-quit: true     # Savaştayken oyundan çıkan oyuncu ölür
-
-# /kitler  (kit alma bekleme süresi, saat)
-kit:
-  cooldown-hours: 24
-
-# ---- SMP çekirdeği ----
-home:
-  default-limit: 2          # Varsayılan ev sayısı (LuckPerms: atlasmc.homes.5 gibi izinle artar)
-
-teleport:
-  warmup-seconds: 3         # Işınlanma beklemesi (yöneticilere uygulanmaz)
-
-
-spawn:
-  protect-world: spawn      # Bu dünyada inşa/kırma/sandık kapalı (yöneticiler hariç)
-  no-pvp: true
-
-chat:
-  cooldown-ms: 1500
-
-daily:                      # /gunluk: 30 günlük takvim (7. günlerde 1, 30. günde 3 kasa anahtarı)
-  money: 500                # 1. gün parası
-  money-step: 75            # Her gün için eklenen para
-  crystals: 10              # 1. gün kristali
-  crystals-step: 1
-  key-type: oyuncu          # 7, 14, 21, 28. günlerde verilen kasa anahtarı tipi (efsanevi / ozel / oyuncu)
-  key-type-final: ozel      # 30. günde verilen anahtar tipi
-
-announcer:
-  enabled: true
-  interval-seconds: 300
-
-# ---- SMP ekstraları ----
-starter:
-  enabled: true             # İlk girişte başlangıç paketi (taş alet, yemek, meşale, bot)
-
-clearlag:
-  enabled: true
-  interval-minutes: 10      # Yerdeki eşyalar bu sürede bir temizlenir (30 sn öncesinden uyarı)
-
-mobs:
-  per-chunk-limit: 60       # Üreme / yumurta ile chunk başına en fazla canlı sayısı (0 = kapalı)
-
-sleep:
-  percentage: 30            # Gece atlamak için uyuması gereken oyuncu yüzdesi (0 = dokunma)
-
-links:
-  discord: ""               # /discord komutunda gösterilir
-
-rules:
-  - "Hile, x-ray ve bug kullanmak yasaktır."
-  - "Küfür, hakaret ve reklam yasaktır."
-  - "Başkasının arazisine veya eşyasına zarar vermek yasaktır."
-  - "Yetkililere saygılı ol, kararlarına uy."
-
-# ---- Yetkili aktifliği / takım ----
-staff:
-  inactive-minutes-week: 120   # Son 7 günde bundan az aktif olan yetkililer ⚠ ile işaretlenir
-
-team:
-  max-members: 5
-  friendly-fire: false         # false: takım arkadaşları birbirine vuramaz
-  create-cost: 0
+# Kasa tipleri. Her tipin kendi kasa bloğu ve KENDİ anahtarı vardır.
+# Yeni tip eklemek için aynı yapıda yeni bir bölüm aç (id'de harf/rakam kullan).
+types:
+  efsanevi:
+    name: "&6&lAtlas MC Efsanevi Kasa"
+    block: YELLOW_SHULKER_BOX
+    key-name: "&6&lEfsanevi Kasa Anahtarı"
+    key-material: NETHER_STAR
+    hologram: "&6&l✦ EFSANEVİ KASA ✦\n&7Sağ tık: &fEfsanevi Anahtarla aç\n&7Sol tık: &fÖdülleri gör"
+  ozel:
+    name: "&d&lAtlas MC Özel Kasa"
+    block: PURPLE_SHULKER_BOX
+    key-name: "&d&lÖzel Kasa Anahtarı"
+    key-material: OMINOUS_TRIAL_KEY
+    hologram: "&d&l✦ ÖZEL KASA ✦\n&7Sağ tık: &fÖzel Anahtarla aç\n&7Sol tık: &fÖdülleri gör"
+  oyuncu:
+    name: "&a&lAtlas MC Oyuncu Kasası"
+    block: LIME_SHULKER_BOX
+    key-name: "&a&lOyuncu Kasası Anahtarı"
+    key-material: TRIAL_KEY
+    hologram: "&a&l✦ OYUNCU KASASI ✦\n&7Sağ tık: &fOyuncu Anahtarıyla aç\n&7Sol tık: &fÖdülleri gör"
